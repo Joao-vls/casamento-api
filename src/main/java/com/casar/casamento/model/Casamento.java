@@ -18,7 +18,35 @@ public class Casamento {
     private LocalDate dia;
 
     @Column(nullable = false)
+    private short quantidadeConvidados;
+
+    @Column(nullable = false)
     private float valorDoLocalDiaCompra;
+
+
+    public short getQuantidadeConvidados() {
+        return quantidadeConvidados;
+    }
+
+    public void setQuantidadeConvidados(short quantidadeConvidados) {
+        this.quantidadeConvidados = quantidadeConvidados;
+    }
+
+    public Contratante getContratante() {
+        return contratante;
+    }
+
+    public void setContratante(Contratante contratante) {
+        this.contratante = contratante;
+    }
+
+    public Locais getLocal() {
+        return local;
+    }
+
+    public void setLocal(Locais local) {
+        this.local = local;
+    }
 
     @ManyToOne
     @JoinColumn(name = "fk_local", nullable = false)
@@ -28,8 +56,9 @@ public class Casamento {
     @JoinColumn(name = "fk_contratante", nullable = false)
     private Contratante contratante;
 
-    public Casamento(LocalDate dia, float valorDoLocalDiaCompra, Locais local, Contratante contratante) {
+    public Casamento(LocalDate dia, short quantidadeConvidados, float valorDoLocalDiaCompra, Locais local, Contratante contratante) {
         this.dia = dia;
+        this.quantidadeConvidados = quantidadeConvidados;
         this.valorDoLocalDiaCompra = valorDoLocalDiaCompra;
         this.local = local;
         this.contratante = contratante;

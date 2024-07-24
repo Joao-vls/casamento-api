@@ -1,13 +1,10 @@
 package com.casar.casamento.repository;
 
+import com.casar.casamento.model.Noivos;
 import org.springframework.data.jpa.repository.JpaRepository;
-
-import com.casar.casamento.model.TipoServico;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface TipoServicoRepository extends JpaRepository<TipoServico,Integer>{
-
-    
-} 
-
+public interface NoivosRepository extends JpaRepository<Noivos, Integer> {
+    boolean existsByUsuarioId(int usuarioId);
+}

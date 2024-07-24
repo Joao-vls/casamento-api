@@ -8,8 +8,10 @@ public class Noivos {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    @Column(length = 150, nullable = false)
-    private String nome;
+    @ManyToOne
+    @JoinColumn(name = "fk_usuario", nullable = false)
+    private Usuario usuario;
+
 
     @Column(nullable = false)
     private int idadeDiaCasamento;
@@ -18,8 +20,8 @@ public class Noivos {
     @JoinColumn(name = "fk_contratante", nullable = false)
     private Contratante contratante;
 
-    public Noivos(int id, String nome, int idadeDiaCasamento, Contratante contratante) {
-        this.nome = nome;
+    public Noivos(int id, Usuario usuario, int idadeDiaCasamento, Contratante contratante) {
+        this.usuario=usuario;
         this.idadeDiaCasamento = idadeDiaCasamento;
         this.contratante = contratante;
     }
@@ -28,13 +30,7 @@ public class Noivos {
         return id;
     }
 
-    public String getNome() {
-        return nome;
-    }
 
-    public void setNome(String nome) {
-        this.nome = nome;
-    }
 
     public int getIdadeDiaCasamento() {
         return idadeDiaCasamento;
@@ -50,5 +46,13 @@ public class Noivos {
 
     public void setContratante(Contratante contratante) {
         this.contratante = contratante;
+    }
+
+    public Usuario getUsuario() {
+        return usuario;
+    }
+
+    public void setUsuario(Usuario usuario) {
+        this.usuario = usuario;
     }
 }

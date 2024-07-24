@@ -16,6 +16,23 @@ public class Contratante {
     @Column(nullable = false)
     private LocalDate dataContrato;
 
+    @Override
+    public String toString() {
+        return "Contratante{" +
+                "id=" + id +
+                ", dataContrato=" + dataContrato +
+                ", usuario=" + usuario +
+                '}';
+    }
+
+    public Usuario getUsuario() {
+        return usuario;
+    }
+
+    public void setUsuario(Usuario usuario) {
+        this.usuario = usuario;
+    }
+
     @ManyToOne
     @JoinColumn(name = "fk_usuario", nullable = false)
     private Usuario usuario;
