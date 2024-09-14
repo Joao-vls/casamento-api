@@ -1,52 +1,29 @@
 package com.casar.casamento.dto;
 
+import com.casar.casamento.model.Contratante;
+import com.casar.casamento.model.Noivos;
 public class UsuarioDTO {
     private String email;
     private String nome;
-    private boolean noivo;
-    private boolean contratante;
+    private String token; // Campo para o token JWT
+    private Object role; // Pode ser Contratante, Noivos, ou null
 
+    // Construtor e getters/setters...
 
-    public UsuarioDTO( String email, String nome, boolean noivo, boolean contratante) {
-
+    public UsuarioDTO(String email, String nome, Object role, String token) {
         this.email = email;
         this.nome = nome;
-        this.noivo = noivo;
-        this.contratante = contratante;
+        this.role = role;
+        this.token = token;
     }
 
-
-    public boolean isNoivo() {
-        return noivo;
+    public String getToken() {
+        return token;
     }
 
-    public void setNoivo(boolean noivo) {
-        this.noivo = noivo;
+    public void setToken(String token) {
+        this.token = token;
     }
 
-    public boolean isContratante() {
-        return contratante;
-    }
-
-    public void setContratante(boolean contratante) {
-        this.contratante = contratante;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getNome() {
-        return nome;
-    }
-
-    public void setNome(String nome) {
-        this.nome = nome;
-    }
-
-
+    // Outros getters e setters...
 }

@@ -3,10 +3,9 @@ package com.casar.casamento.model;
 import jakarta.persistence.*;
 
 import java.time.LocalDate;
-import java.util.List;
-
 
 @Entity
+@Table(name = "casamento_sem_contrato")
 public class CasamentoSemContrato {
 
     @Id
@@ -16,35 +15,19 @@ public class CasamentoSemContrato {
     @Column(nullable = false)
     private LocalDate dia;
 
-    @Column(nullable = false)
-    private List<String> noivos;
+    @ManyToOne
+    @JoinColumn(name = "fk_local", nullable = false)
+    private Locais local;
 
-    @Column(nullable = true)
-    private List<String> padrinhos;
+    @ManyToOne
+    @JoinColumn(name = "fk_usuario", nullable = false)
+    private Usuario usuario;
 
     @Column(nullable = false)
     private short quantidadeConvidados;
 
     @Column(nullable = false)
     private float valorDoLocalDiaCompra;
-
-    @ManyToOne
-    @JoinColumn(name = "fk_usuario", nullable = false)
-    private Usuario usuario;
-
-    @ManyToOne
-    @JoinColumn(name = "fk_local", nullable = false)
-    private Locais local;
-
-    public CasamentoSemContrato(LocalDate dia, List<String> noivos, List<String> padrinhos, short quantidadeConvidados, float valorDoLocalDiaCompra, Usuario usuario, Locais local) {
-        this.dia = dia;
-        this.noivos = noivos;
-        this.padrinhos = padrinhos;
-        this.quantidadeConvidados = quantidadeConvidados;
-        this.valorDoLocalDiaCompra = valorDoLocalDiaCompra;
-        this.usuario = usuario;
-        this.local = local;
-    }
 
     public LocalDate getDia() {
         return dia;
@@ -54,20 +37,20 @@ public class CasamentoSemContrato {
         this.dia = dia;
     }
 
-    public List<String> getNoivos() {
-        return noivos;
+    public Locais getLocal() {
+        return local;
     }
 
-    public void setNoivos(List<String> noivos) {
-        this.noivos = noivos;
+    public void setLocal(Locais local) {
+        this.local = local;
     }
 
-    public List<String> getPadrinhos() {
-        return padrinhos;
+    public Usuario getUsuario() {
+        return usuario;
     }
 
-    public void setPadrinhos(List<String> padrinhos) {
-        this.padrinhos = padrinhos;
+    public void setUsuario(Usuario usuario) {
+        this.usuario = usuario;
     }
 
     public short getQuantidadeConvidados() {
@@ -84,21 +67,5 @@ public class CasamentoSemContrato {
 
     public void setValorDoLocalDiaCompra(float valorDoLocalDiaCompra) {
         this.valorDoLocalDiaCompra = valorDoLocalDiaCompra;
-    }
-
-    public Usuario getUsuario() {
-        return usuario;
-    }
-
-    public void setUsuario(Usuario usuario) {
-        this.usuario = usuario;
-    }
-
-    public Locais getLocal() {
-        return local;
-    }
-
-    public void setLocal(Locais local) {
-        this.local = local;
     }
 }
