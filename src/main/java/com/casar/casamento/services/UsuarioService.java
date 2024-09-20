@@ -34,40 +34,37 @@ public class UsuarioService {
 
     @Transactional
     public UsuarioDTO createUser(Usuario user) {
-        Optional<Usuario> optionalUsuario = usuarioRepository.findByEmail(user.getEmail());
+        Optional<Usuario> existingUserOpt = usuarioRepository.findByEmail(user.getEmail());
 
-        if (optionalUsuario.isPresent()) {
-            Usuario existingUser = optionalUsuario.get();
-
-            if (!passwordEncoder.matches(user.getSenha(), existingUser.getSenha())) {
-                throw new IllegalArgumentException("Nome ou email ou senha inválidos");
-            }
-
-            if (!user.getNome().equals(existingUser.getNome())) {
-                throw new IllegalArgumentException("Nome ou email ou senha inválidos");
-            }
-
+        if (existingUserOpt.isPresent()) {
+            Usuario existingUser = existingUserOpt.get();
+            validateUserCredentials(user, existingUser);
             return buildUsuarioDTO(existingUser);
         } else {
             user.setSenha(passwordEncoder.encode(user.getSenha()));
-            usuarioRepository.save(user);
-            return buildUsuarioDTO(user);
+            Usuario savedUser = usuarioRepository.save(user);
+            return buildUsuarioDTO(savedUser);
+        }
+    }
+
+    private void validateUserCredentials(Usuario inputUser, Usuario existingUser) {
+        boolean passwordMatches = passwordEncoder.matches(inputUser.getSenha(), existingUser.getSenha());
+        boolean nameMatches = inputUser.getNome().equals(existingUser.getNome());
+
+        if (!passwordMatches || !nameMatches) {
+            throw new IllegalArgumentException("Nome ou email ou senha inválidos");
         }
     }
 
     private UsuarioDTO buildUsuarioDTO(Usuario user) {
-        Contratante contratante = contratanteService.isUsuario(user.getId()) ? contratanteService.getByUsuarioId(user.getId()) : null;
-        Noivos noivo = noivosService.isUsuario(user.getId()) ? noivosService.getByUsuarioId(user.getId()) : null;
+        Contratante contratante = contratanteService.isUsuario(user.getId()) ?
+                contratanteService.getByUsuarioId(user.getId()) : null;
+        Noivos noivo = noivosService.isUsuario(user.getId()) ?
+                noivosService.getByUsuarioId(user.getId()) : null;
 
         String token = tokenService.generateToken(user); // Gera o token JWT
 
-        if (contratante != null) {
-            return new UsuarioDTO(user.getEmail(), user.getNome(), contratante, token);
-        } else if (noivo != null) {
-            return new UsuarioDTO(user.getEmail(), user.getNome(), noivo, token);
-        } else {
-            return new UsuarioDTO(user.getEmail(), user.getNome(), (Contratante) null, token);
-        }
+        return new UsuarioDTO(user.getEmail(), user.getNome(), getUserRoles(user), token);
     }
 
     public List<String> getUserRoles(Usuario user) {

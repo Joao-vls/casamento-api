@@ -106,4 +106,19 @@ public class Locais {
     public String getDescricao() {
         return descricao;
     }
+
+    @Override
+    public String toString() {
+        return "Locais{" +
+                "municipio='" + municipio + '\'' +
+                ", uf='" + uf + '\'' +
+                ", valor=" + valor +
+                ", quantidadeMaxPessoas=" + quantidadeMaxPessoas +
+                ", rua='" + rua + '\'' +
+                ", bairro='" + bairro + '\'' +
+                ", numero='" + numero + '\'' +
+                ", complemento='" + complemento + '\'' +
+                ", descricao='" + descricao + '\'' +
+                '}';
+    }
 }
