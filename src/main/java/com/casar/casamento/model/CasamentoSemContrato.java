@@ -110,8 +110,8 @@ public class CasamentoSemContrato {
         return "CasamentoSemContrato{" +
                 "valorDoLocalDiaCompra=" + valorDoLocalDiaCompra +
                 ", quantidadeConvidados=" + quantidadeConvidados +
-                ", usuario=" + usuario +
-                ", local=" + local +
+                ", usuario={ email=" + usuario.getEmail() +",nome="+usuario.getNome()+
+                "}, local=" + local +
                 ", dia=" + dia +
                 '}';
     }
