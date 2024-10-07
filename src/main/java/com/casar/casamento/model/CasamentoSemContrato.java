@@ -66,7 +66,11 @@ public class CasamentoSemContrato {
     }
 
     public Usuario getUsuario() {
-        return usuario;
+        return new Usuario(usuario.email,usuario.nome);
+    }
+
+    public int getId() {
+        return id;
     }
 
     public void setUsuario(Usuario usuario) {

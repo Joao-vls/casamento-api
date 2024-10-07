@@ -31,6 +31,7 @@ public class CasamentoSemContratoService {
     public List<CasamentoSemContrato> getCasamentosPorUsuario(Usuario usuario) {
         Optional<Usuario> usuario1 = usuarioRepository.findByEmail(usuario.getEmail());
         if (usuario1.isPresent()) {
+            List<CasamentoSemContrato> casamentoSemContratoes = casamentoSemContratoRepository.findByUsuario(usuario);
             return casamentoSemContratoRepository.findByUsuario(usuario);
         } else {
             return null;
@@ -80,6 +81,13 @@ public class CasamentoSemContratoService {
             e.printStackTrace();
             throw new RuntimeException("Erro ao salvar o casamento", e);
         }
+    }
+    public Optional<CasamentoSemContrato> getById(int id) {
+        return casamentoSemContratoRepository.findById(id);
+    }
+
+    public CasamentoSemContrato save(CasamentoSemContrato casamento) {
+        return casamentoSemContratoRepository.save(casamento);
     }
 
 

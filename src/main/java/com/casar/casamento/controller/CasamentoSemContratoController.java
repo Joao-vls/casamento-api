@@ -12,6 +12,7 @@ import com.casar.casamento.services.LocaisService;
 import com.casar.casamento.services.UsuarioService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -90,4 +91,106 @@ public class CasamentoSemContratoController {
             return new ResponseEntity<>(new ErrorResponse("Erro ao criar o casamento", null), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
+    @PatchMapping("/sem-contrato/{id}/convidados")
+    public ResponseEntity<Object> updateQuantidadeConvidados(
+            @PathVariable("id") int id,
+            @RequestParam("quantidadeConvidados") short quantidadeConvidados) {
+
+        try {
+            // Busca o casamento pelo ID
+            Optional<CasamentoSemContrato> optionalCasamento = casamentoSemContratoService.getById(id);
+
+            if (optionalCasamento.isPresent()) {
+                CasamentoSemContrato casamento = optionalCasamento.get();
+
+                // Atualiza a quantidade de convidados
+                casamento.setQuantidadeConvidados(quantidadeConvidados);
+
+                // Salva a alteração
+                casamentoSemContratoService.save(casamento);
+
+                // Retorna a resposta de sucesso
+                return new ResponseEntity<>(casamento, HttpStatus.OK);
+            } else {
+                // Se o casamento não for encontrado, retorna NOT FOUND
+                return new ResponseEntity<>(new ErrorResponse("Casamento não encontrado", null), HttpStatus.NOT_FOUND);
+            }
+
+        } catch (Exception e) {
+            // Se houver qualquer erro, retorna INTERNAL SERVER ERROR
+            return new ResponseEntity<>(new ErrorResponse("Erro ao atualizar a quantidade de convidados", null), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+    @PatchMapping("/sem-contrato/{id}/local")
+    public ResponseEntity<Object> updateLocal(
+            @PathVariable("id") int id,
+            @RequestParam("localId") int localId) {
+        try {
+            // Busca o casamento pelo ID
+            Optional<CasamentoSemContrato> optionalCasamento = casamentoSemContratoService.getById(id);
+
+            if (optionalCasamento.isPresent()) {
+                CasamentoSemContrato casamento = optionalCasamento.get();
+
+                // Busca o local pelo ID fornecido
+                Optional<Locais> optionalLocal = locai.findById(localId);
+                if (optionalLocal.isPresent()) {
+                    Locais novoLocal = optionalLocal.get();
+
+                    // Atualiza o local do casamento
+                    casamento.setLocal(novoLocal);
+
+                    // Salva a alteração
+                    casamentoSemContratoService.save(casamento);
+
+                    // Retorna a resposta de sucesso
+                    return new ResponseEntity<>(casamento, HttpStatus.OK);
+                } else {
+                    // Se o local não for encontrado, retorna NOT FOUND
+                    return new ResponseEntity<>(new ErrorResponse("Local não encontrado", null), HttpStatus.NOT_FOUND);
+                }
+
+            } else {
+                // Se o casamento não for encontrado, retorna NOT FOUND
+                return new ResponseEntity<>(new ErrorResponse("Casamento não encontrado", null), HttpStatus.NOT_FOUND);
+            }
+
+        } catch (Exception e) {
+            // Se houver qualquer erro, retorna INTERNAL SERVER ERROR
+            return new ResponseEntity<>(new ErrorResponse("Erro ao atualizar o local", null), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+    @PatchMapping("/sem-contrato/{id}/data")
+    public ResponseEntity<Object> updateData(
+            @PathVariable("id") int id,
+            @RequestParam("novaData") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate novaData) {
+
+        try {
+            // Busca o casamento pelo ID
+            Optional<CasamentoSemContrato> optionalCasamento = casamentoSemContratoService.getById(id);
+
+            if (optionalCasamento.isPresent()) {
+                CasamentoSemContrato casamento = optionalCasamento.get();
+
+                // Atualiza a data do casamento
+                casamento.setDia(novaData);
+
+                // Salva a alteração
+                casamentoSemContratoService.save(casamento);
+
+                // Retorna a resposta de sucesso
+                return new ResponseEntity<>(casamento, HttpStatus.OK);
+            } else {
+                // Se o casamento não for encontrado, retorna NOT FOUND
+                return new ResponseEntity<>(new ErrorResponse("Casamento não encontrado", null), HttpStatus.NOT_FOUND);
+            }
+
+        } catch (Exception e) {
+            // Se houver qualquer erro, retorna INTERNAL SERVER ERROR
+            return new ResponseEntity<>(new ErrorResponse("Erro ao atualizar a data do casamento", null), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+
 }

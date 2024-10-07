@@ -13,8 +13,10 @@ public class LocaisService {
     @Autowired
     private LocaisRepository locaisRepository;
 
-    public Locais getLocaisById(Integer id) {
-        Optional<Locais> locais = locaisRepository.findById(id);
-        return locais.orElse(null); // Retorna o Local ou null caso não exista
-    }
+        // Mantém apenas o findById que retorna Optional
+        public Optional<Locais> findById(int id) {
+            return locaisRepository.findById(id);
+        }
+
+
 }
