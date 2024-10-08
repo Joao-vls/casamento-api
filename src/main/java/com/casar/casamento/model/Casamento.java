@@ -14,39 +14,12 @@ public class Casamento {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
+    @ManyToOne
+    @JoinColumn(name = "fk_casamentoSemContrato", nullable = false)
+    private CasamentoSemContrato casamentoSemContrato;
+
     @Column(nullable = false)
     private LocalDate dia;
-
-    @Column(nullable = false)
-    private short quantidadeConvidados;
-
-    @Column(nullable = false)
-    private float valorDoLocalDiaCompra;
-
-
-    public short getQuantidadeConvidados() {
-        return quantidadeConvidados;
-    }
-
-    public void setQuantidadeConvidados(short quantidadeConvidados) {
-        this.quantidadeConvidados = quantidadeConvidados;
-    }
-
-    public Contratante getContratante() {
-        return contratante;
-    }
-
-    public void setContratante(Contratante contratante) {
-        this.contratante = contratante;
-    }
-
-    public Locais getLocal() {
-        return local;
-    }
-
-    public void setLocal(Locais local) {
-        this.local = local;
-    }
 
     @ManyToOne
     @JoinColumn(name = "fk_local", nullable = false)
@@ -56,12 +29,19 @@ public class Casamento {
     @JoinColumn(name = "fk_contratante", nullable = false)
     private Contratante contratante;
 
-    public Casamento(LocalDate dia, short quantidadeConvidados, float valorDoLocalDiaCompra, Locais local, Contratante contratante) {
+    public Casamento(CasamentoSemContrato casamentoSemContrato, LocalDate dia, Locais local, Contratante contratante) {
+        this.casamentoSemContrato = casamentoSemContrato;
         this.dia = dia;
-        this.quantidadeConvidados = quantidadeConvidados;
-        this.valorDoLocalDiaCompra = valorDoLocalDiaCompra;
         this.local = local;
         this.contratante = contratante;
+    }
+
+    public CasamentoSemContrato getCasamentoSemContrato() {
+        return casamentoSemContrato;
+    }
+
+    public void setCasamentoSemContrato(CasamentoSemContrato casamentoSemContrato) {
+        this.casamentoSemContrato = casamentoSemContrato;
     }
 
     public LocalDate getDia() {
@@ -72,11 +52,19 @@ public class Casamento {
         this.dia = dia;
     }
 
-    public float getValorDoLocalDiaCompra() {
-        return valorDoLocalDiaCompra;
+    public Locais getLocal() {
+        return local;
     }
 
-    public void setValorDoLocalDiaCompra(float valorDoLocalDiaCompra) {
-        this.valorDoLocalDiaCompra = valorDoLocalDiaCompra;
+    public void setLocal(Locais local) {
+        this.local = local;
+    }
+
+    public Contratante getContratante() {
+        return contratante;
+    }
+
+    public void setContratante(Contratante contratante) {
+        this.contratante = contratante;
     }
 }

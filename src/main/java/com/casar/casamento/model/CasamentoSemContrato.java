@@ -20,6 +20,9 @@ public class CasamentoSemContrato {
     @Column(nullable = false)
     private LocalDate dia;
 
+    @Column( columnDefinition = "BOOLEAN DEFAULT false")
+    private boolean pagamento = false;
+
     @ManyToOne
     @JoinColumn(name = "fk_local", nullable = false)
     private Locais local;

@@ -1,15 +1,13 @@
 package com.casar.casamento.controller;
 
 import com.casar.casamento.dto.CasamentoSemContratoDTO;
+import com.casar.casamento.model.Casamento;
 import com.casar.casamento.model.CasamentoSemContrato;
 import com.casar.casamento.model.Locais;
 import com.casar.casamento.model.Usuario;
 import com.casar.casamento.repository.LocaisRepository;
 import com.casar.casamento.repository.UsuarioRepository;
-import com.casar.casamento.services.CasamentoSemContratoService;
-import com.casar.casamento.services.ErrorResponse;
-import com.casar.casamento.services.LocaisService;
-import com.casar.casamento.services.UsuarioService;
+import com.casar.casamento.services.*;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -38,6 +36,9 @@ public class CasamentoSemContratoController {
 
     @Autowired
     private LocaisService locai;
+
+    @Autowired
+    private CasamentoService casamentoService;
 
     @GetMapping("/contratante/{email}")
     public ResponseEntity<List<CasamentoSemContrato>> getCasamentosByContratante(
@@ -84,7 +85,7 @@ public class CasamentoSemContratoController {
 
         try {
             CasamentoSemContrato criado = casamentoSemContratoService.createCasamentoSemContratoFromDTO(casamentoDTO);
-            return new ResponseEntity<>(criado.toString(), HttpStatus.CREATED);
+            return new ResponseEntity<>(criado, HttpStatus.CREATED);
         } catch (IllegalArgumentException e) {
             return new ResponseEntity<>(new ErrorResponse(e.getMessage(), null), HttpStatus.BAD_REQUEST);
         } catch (Exception e) {
@@ -140,7 +141,7 @@ public class CasamentoSemContratoController {
 
                     // Atualiza o local do casamento
                     casamento.setLocal(novoLocal);
-
+                    casamento.setValorDoLocalDiaCompra(novoLocal.getValor());
                     // Salva a alteração
                     casamentoSemContratoService.save(casamento);
 
@@ -189,6 +190,40 @@ public class CasamentoSemContratoController {
         } catch (Exception e) {
             // Se houver qualquer erro, retorna INTERNAL SERVER ERROR
             return new ResponseEntity<>(new ErrorResponse("Erro ao atualizar a data do casamento", null), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+    @PatchMapping("/sem-contrato/{id}/confirmar-pagamento")
+    public ResponseEntity<Object> confirmarPagamento(@PathVariable("id") int id) {
+        try {
+            // Busca o CasamentoSemContrato pelo ID
+            Optional<CasamentoSemContrato> optionalCasamento = casamentoSemContratoService.getById(id);
+
+            if (optionalCasamento.isPresent()) {
+                CasamentoSemContrato casamentoSemContrato = optionalCasamento.get();
+
+                // Confirma o pagamento
+                casamentoSemContrato.setPagamento(true);
+                casamentoSemContratoService.save(casamentoSemContrato);
+
+                // Cria um novo objeto Casamento e salva os detalhes
+                Casamento casamento = new Casamento(
+                        casamentoSemContrato,
+                        casamentoSemContrato.getDia(),
+                        casamentoSemContrato.getLocal(),
+                        casamentoSemContrato.getUsuario().getContratante() // Assumindo que o usuário tem um contratante
+                );
+
+                // Salva o casamento
+                casamentoService.save(casamento);
+
+                // Retorna a resposta de sucesso
+                return new ResponseEntity<>(casamento, HttpStatus.OK);
+            } else {
+                return new ResponseEntity<>(new ErrorResponse("Casamento não encontrado", null), HttpStatus.NOT_FOUND);
+            }
+
+        } catch (Exception e) {
+            return new ResponseEntity<>(new ErrorResponse("Erro ao confirmar pagamento e salvar o casamento", null), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
