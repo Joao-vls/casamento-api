@@ -40,6 +40,12 @@ public class Usuario {
         this.email = email;
         this.nome = nome;
     }
+    public Usuario(int id, String email, String nome) {
+        this.id=id;
+        this.email = email;
+        this.nome = nome;
+    }
+
 
     public Usuario() {
 

@@ -1,10 +1,7 @@
 package com.casar.casamento.controller;
 
 import com.casar.casamento.dto.CasamentoSemContratoDTO;
-import com.casar.casamento.model.Casamento;
-import com.casar.casamento.model.CasamentoSemContrato;
-import com.casar.casamento.model.Locais;
-import com.casar.casamento.model.Usuario;
+import com.casar.casamento.model.*;
 import com.casar.casamento.repository.LocaisRepository;
 import com.casar.casamento.repository.UsuarioRepository;
 import com.casar.casamento.services.*;
@@ -39,6 +36,9 @@ public class CasamentoSemContratoController {
 
     @Autowired
     private CasamentoService casamentoService;
+
+    @Autowired
+    private ContratanteService contratanteService;
 
     @GetMapping("/contratante/{email}")
     public ResponseEntity<List<CasamentoSemContrato>> getCasamentosByContratante(
@@ -204,13 +204,14 @@ public class CasamentoSemContratoController {
                 // Confirma o pagamento
                 casamentoSemContrato.setPagamento(true);
                 casamentoSemContratoService.save(casamentoSemContrato);
-
+                Contratante contratante = new Contratante(LocalDate.now(), casamentoSemContrato.getUsuario());
+                contratanteService.save(contratante);
                 // Cria um novo objeto Casamento e salva os detalhes
                 Casamento casamento = new Casamento(
                         casamentoSemContrato,
                         casamentoSemContrato.getDia(),
                         casamentoSemContrato.getLocal(),
-                        casamentoSemContrato.getUsuario().getContratante() // Assumindo que o usuário tem um contratante
+                        contratante
                 );
 
                 // Salva o casamento

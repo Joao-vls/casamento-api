@@ -69,7 +69,7 @@ public class CasamentoSemContrato {
     }
 
     public Usuario getUsuario() {
-        return new Usuario(usuario.email,usuario.nome);
+        return new Usuario(usuario.id,usuario.email,usuario.nome);
     }
 
     public int getId() {
@@ -110,6 +110,10 @@ public class CasamentoSemContrato {
 
     public void setPadrinhos(List<String> padrinhos) {
         this.padrinhos = padrinhos;
+    }
+
+    public void setPagamento(boolean pagamento) {
+        this.pagamento = pagamento;
     }
 
     @Override

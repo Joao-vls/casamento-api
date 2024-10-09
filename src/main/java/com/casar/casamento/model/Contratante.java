@@ -41,6 +41,9 @@ public class Contratante {
         this.dataContrato = dataContrato;
         this.usuario = usuario;
     }
+    public Contratante(){
+
+    }
 
     public LocalDate getDataContrato() {
         return dataContrato;

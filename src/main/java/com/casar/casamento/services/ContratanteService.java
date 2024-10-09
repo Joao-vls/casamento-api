@@ -20,4 +20,8 @@ public class ContratanteService {
     boolean isUsuario(int id){
        return contratanteRepository.existsByUsuarioId(id);
     }
+
+    public Contratante save(Contratante contratante) {
+        return contratanteRepository.save(contratante);
+    }
 }

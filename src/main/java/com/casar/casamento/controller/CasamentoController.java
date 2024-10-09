@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 
 @RestController
@@ -23,19 +25,21 @@ public class CasamentoController {
     private CasamentoSemContratoService casamentoSemContratoService;
 
     @GetMapping("/verificar/{id}")
-    public ResponseEntity<String> verificarCasamento(@PathVariable("id") int idCasamentoSemContrato) {
+    public ResponseEntity<Map<String, Object>> verificarCasamento(@PathVariable("id") int idCasamentoSemContrato) {
         Optional<CasamentoSemContrato> optionalCasamentoSemContrato = casamentoSemContratoService.getById(idCasamentoSemContrato);
+        Map<String, Object> response = new HashMap<>();
+
         if (optionalCasamentoSemContrato.isPresent()) {
             CasamentoSemContrato casamentoSemContrato = optionalCasamentoSemContrato.get();
             boolean existe = casamentoService.verificarSeCasamentoSemContratoJaEstaEmCasamento(casamentoSemContrato);
 
-            if (existe) {
-                return new ResponseEntity<>("Casamento já existe para este CasamentoSemContrato.", HttpStatus.OK);
-            } else {
-                return new ResponseEntity<>("Não há casamento relacionado a este CasamentoSemContrato.", HttpStatus.NOT_FOUND);
-            }
+            response.put("mensagem", existe ? "Casamento já existe para este CasamentoSemContrato." : "Não há casamento relacionado a este CasamentoSemContrato.");
+            response.put("existe", existe);
+            return new ResponseEntity<>(response, HttpStatus.OK);
         } else {
-            return new ResponseEntity<>("CasamentoSemContrato não encontrado.", HttpStatus.NOT_FOUND);
+            response.put("mensagem", "CasamentoSemContrato não encontrado.");
+            response.put("existe", false);
+            return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
         }
     }
 }
