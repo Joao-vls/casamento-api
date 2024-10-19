@@ -32,6 +32,8 @@ dependencies {
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation 'org.springframework.security:spring-security-test'
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+	implementation 'com.itextpdf:itext7-core:8.0.5'
+
 }
 tasks.withType(JavaCompile).configureEach {
 	options.encoding = 'UTF-8'

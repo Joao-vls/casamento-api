@@ -1,17 +1,15 @@
 package com.casar.casamento.services;
 
 import com.casar.casamento.dto.CasamentoSemContratoDTO;
-import com.casar.casamento.model.CasamentoSemContrato;
-import com.casar.casamento.model.Locais;
-import com.casar.casamento.model.Usuario;
-import com.casar.casamento.repository.CasamentoSemContratoRepository;
-import com.casar.casamento.repository.LocaisRepository;
-import com.casar.casamento.repository.UsuarioRepository;
+import com.casar.casamento.model.*;
+import com.casar.casamento.repository.*;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -28,6 +26,12 @@ public class CasamentoSemContratoService {
     @Autowired
     private LocaisRepository locaisRepository;
 
+    @Autowired
+    private TipoServicoRepository tipoServicoRepository;
+
+    @Autowired
+    private ServicosRepository servicosRepository;
+
     public List<CasamentoSemContrato> getCasamentosPorUsuario(Usuario usuario) {
         Optional<Usuario> usuario1 = usuarioRepository.findByEmail(usuario.getEmail());
         if (usuario1.isPresent()) {
@@ -42,8 +46,6 @@ public class CasamentoSemContratoService {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         Usuario usuarioAutenticado = (Usuario) authentication.getPrincipal();
 
-        // Imprime o DTO recebido para depuração
-        System.out.println("DTO Recebido: " + casamentoDTO);
 
         // Verifica se o ID do usuário no DTO corresponde ao ID do usuário autenticado
         if (usuarioAutenticado.getId() != casamentoDTO.getUsuarioId()) {
@@ -103,5 +105,55 @@ public class CasamentoSemContratoService {
         casamento.setValorDoLocalDiaCompra(casamentoDTO.getValorDoLocalDiaCompra());
         return casamento;
     }
+    public CasamentoSemContrato adicionarServico(int casamentoId, List<Integer> servicosDTO) {
+        CasamentoSemContrato casamento = casamentoSemContratoRepository.findById(casamentoId)
+                .orElseThrow(() -> new EntityNotFoundException("Casamento não encontrado"));
+
+        for (Integer servicoDTO : servicosDTO) {
+            TipoServico tipoServico = tipoServicoRepository.findById(servicoDTO)
+                    .orElseThrow(() -> new EntityNotFoundException("Tipo de serviço não encontrado"));
+
+            // Cria a entidade Servicos e a associa ao casamento
+            Servicos servico = new Servicos();
+            servico.setTipoServico(tipoServico);
+            servico.setCasamento(casamento);
+            servico.setValor(tipoServico.getValor());
+
+            // Adiciona o serviço ao casamento
+            casamento.getServicos().add(servico);
+            servicosRepository.save(servico);  // Salva o serviço individualmente
+        }
+
+        return casamentoSemContratoRepository.save(casamento);  // Atualiza o casamento
+    }
+    @Transactional
+    public CasamentoSemContrato substituirServicos(int casamentoId, List<Integer> servicosDTO) {
+        // Busca o casamento pelo ID
+        CasamentoSemContrato casamento = casamentoSemContratoRepository.findById(casamentoId)
+                .orElseThrow(() -> new EntityNotFoundException("Casamento não encontrado"));
+
+        // Remove todos os serviços associados a este casamento
+        servicosRepository.deleteByCasamentoId(casamentoId);
+        
+        // Adiciona os novos serviços
+        for (Integer servicoId : servicosDTO) {
+            TipoServico tipoServico = tipoServicoRepository.findById(servicoId)
+                    .orElseThrow(() -> new EntityNotFoundException("Tipo de serviço não encontrado"));
+
+            // Cria a entidade Servicos e a associa ao casamento
+            Servicos servico = new Servicos();
+            servico.setTipoServico(tipoServico);
+            servico.setCasamento(casamento);
+            servico.setValor(tipoServico.getValor());
+
+            // Adiciona o serviço à lista de serviços do casamento
+            casamento.getServicos().add(servico);
+        }
+
+        // Atualiza e salva o casamento junto com os novos serviços
+        return casamentoSemContratoRepository.save(casamento);
+    }
+
+
 
 }

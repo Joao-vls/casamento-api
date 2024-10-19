@@ -20,6 +20,7 @@ public class CasamentoSemContrato {
     @Column(nullable = false)
     private LocalDate dia;
 
+
     @Column( columnDefinition = "BOOLEAN DEFAULT false")
     private boolean pagamento = false;
 
@@ -50,6 +51,20 @@ public class CasamentoSemContrato {
 
     @Column(nullable = false)
     private float valorDoLocalDiaCompra;
+
+    @OneToMany(mappedBy = "casamento", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Servicos> servicos = new ArrayList<>();
+
+    public boolean isPagamento() {
+        return pagamento;
+    }
+    public void setServicos(List<Servicos> servicos) {
+        this.servicos = servicos;
+    }
+
+    public List<Servicos> getServicos() {
+        return servicos;
+    }
 
     // Getters e Setters
     public LocalDate getDia() {
@@ -124,6 +139,7 @@ public class CasamentoSemContrato {
                 ", usuario={ email=" + usuario.getEmail() +",nome="+usuario.getNome()+
                 "}, local=" + local +
                 ", dia=" + dia +
+                ",servicos="+servicos+
                 '}';
     }
 }

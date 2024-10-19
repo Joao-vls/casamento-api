@@ -19,6 +19,9 @@ public class TipoServico {
     private float valor;
 
 
+    public int getId() {
+        return id;
+    }
 
     public String getNome() {
         return nome;

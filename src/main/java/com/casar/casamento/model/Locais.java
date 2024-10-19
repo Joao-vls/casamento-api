@@ -3,6 +3,9 @@ package com.casar.casamento.model;
 
 import jakarta.persistence.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity
 public class Locais {
     @Id
@@ -32,6 +35,15 @@ public class Locais {
 
     @Column(length = 40)
     private String complemento;
+
+    @ElementCollection
+    @CollectionTable(name = "locais_imagens", joinColumns = @JoinColumn(name = "local_id"))
+    @Column(name = "imagem")
+    private List<String> imagens = new ArrayList<>();  // Lista de imagens
+
+    public List<String> getImagens() {
+        return imagens;
+    }
 
     @Column(length = 400)
     private String descricao;
@@ -109,16 +121,10 @@ public class Locais {
 
     @Override
     public String toString() {
-        return "Locais{" +
-                "municipio='" + municipio + '\'' +
-                ", uf='" + uf + '\'' +
-                ", valor=" + valor +
-                ", quantidadeMaxPessoas=" + quantidadeMaxPessoas +
-                ", rua='" + rua + '\'' +
-                ", bairro='" + bairro + '\'' +
-                ", numero='" + numero + '\'' +
-                ", complemento='" + complemento + '\'' +
-                ", descricao='" + descricao + '\'' +
-                '}';
+        return
+                municipio  +
+                "," +
+                rua +
+                ", nº" + numero;
     }
 }

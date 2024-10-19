@@ -13,6 +13,26 @@ CREATE TABLE locais (
     descricao VARCHAR(400)
 );
 
+CREATE TABLE tipo_servico (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    nome VARCHAR(50),
+    descricao VARCHAR(150),
+    valor FLOAT NOT NULL
+);
+
+
+INSERT INTO tipo_servico (nome, descricao, valor)
+VALUES
+('Decoração', 'Serviço de decoração para o casamento', 3000.00),
+('Buffet <150', 'Serviço de buffet para o casamento', 5000.00),
+('Buffet >150<300', 'Serviço de buffet para o casamento', 9350.00),
+('Fotografia', 'Serviço de fotografia para o casamento', 2500.00),
+('DJ', 'Serviço de DJ para o casamento', 1500.00),
+('Bolo e doces', 'Serviço de bolo e doces para o casamento', 2000.00),
+('Transporte', 'Serviço de transporte para o casamento', 1800.00),
+('Vestido', 'Vestido  para o casamento', 3500.00),
+('Traje', 'Traje  para o casamento', 1000.00),
+('Maquiagem e cabelo', 'Serviço de maquiagem e cabelo para o casamento', 1200.00);
 
 INSERT INTO locais (municipio, uf, valor, quantidade_max_pessoas, rua, bairro, numero, complemento)
 VALUES
@@ -30,3 +50,37 @@ VALUES
 INSERT INTO locais (municipio, uf, valor, quantidade_max_pessoas, rua, bairro, numero, complemento)
 VALUES
 ('São Paulo', 'SP', 5000.00, 200, 'Paulista', 'Centro', '13', 'Apartamento 11');
+
+
+INSERT INTO locais_imagens (local_id, imagem)
+VALUES
+(1, '1.jpg'),
+(1, '2.jpg'),
+(1, '3.jpg'),
+(2, '4.jpg'),
+(2, '5.jpg'),
+(2, '6.jpg'),
+(3, '7.jpg'),
+(3, '8.jpg'),
+(3, '8.jpg'),
+(4, '9.jpg'),
+(4, '10.jpg'),
+(4, '11.jpg'),
+(5, '12.jpg'),
+(5, '13.jpg'),
+(5, '14.jpg'),
+(6, '15.jpg'),
+(6, '16.jpg'),
+(6, '17.jpg'),
+(7, '18.jpg'),
+(7, '19.jpg'),
+(7, '13.jpg'),
+(8, '7.jpg'),
+(8, '2.jpg'),
+(8, '4.jpg'),
+(9, '9.jpg'),
+(9, '15.jpg'),
+(9, '3.jpg'),
+(10, '9.jpg'),
+(10, '5.jpg'),
+(10, '14.jpg');

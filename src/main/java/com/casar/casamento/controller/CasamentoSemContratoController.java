@@ -66,6 +66,7 @@ public class CasamentoSemContratoController {
             if (casamentoGet.isEmpty()) {
                 casamentoGet = null;
             }
+            System.out.println(casamentoGet);
             return new ResponseEntity<>(casamentoGet, HttpStatus.OK);
         } else {
             // Retorna NOT FOUND se o usuário não for encontrado
@@ -73,7 +74,14 @@ public class CasamentoSemContratoController {
         }
     }
 
+    @PatchMapping("/{id}/adicionar-servico")
+    public ResponseEntity<CasamentoSemContrato> adicionarServico(
+            @PathVariable int id,
+            @RequestBody List<Integer> servicosDTO) {
 
+        CasamentoSemContrato casamentoAtualizado = casamentoSemContratoService.substituirServicos(id, servicosDTO);
+        return ResponseEntity.ok(casamentoAtualizado);
+    }
 
     @PostMapping("/sem-contrato")
     public ResponseEntity<Object> createCasamentoSemContrato(@Valid @RequestBody CasamentoSemContratoDTO casamentoDTO, BindingResult result) {
